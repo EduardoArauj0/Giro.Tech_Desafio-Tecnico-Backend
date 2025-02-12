@@ -1,13 +1,13 @@
 const { DataTypes } = require('sequelize')
-const sequelize = require('../config/database')
+const sequelize = require('../database/connection')
 
 const Currency = sequelize.define(
 	'Currency',
 	{
 		id: {
 			type: DataTypes.INTEGER,
-			primaryKey: true,
 			autoIncrement: true,
+			primaryKey: true,
 		},
 		name: {
 			type: DataTypes.STRING,
@@ -20,6 +20,7 @@ const Currency = sequelize.define(
 	},
 	{
 		timestamps: false,
+		tableName: 'currencies',
 	},
 )
 

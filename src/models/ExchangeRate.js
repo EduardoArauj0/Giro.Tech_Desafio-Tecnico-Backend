@@ -1,5 +1,5 @@
 const { DataTypes } = require('sequelize')
-const sequelize = require('../config/database')
+const sequelize = require('../database/connection')
 const Currency = require('./Currency')
 
 const ExchangeRate = sequelize.define(
@@ -7,11 +7,11 @@ const ExchangeRate = sequelize.define(
 	{
 		id: {
 			type: DataTypes.INTEGER,
-			primaryKey: true,
 			autoIncrement: true,
+			primaryKey: true,
 		},
 		date: {
-			type: DataTypes.DATE,
+			type: DataTypes.DATEONLY,
 			allowNull: false,
 		},
 		daily_variation: {
@@ -25,9 +25,12 @@ const ExchangeRate = sequelize.define(
 	},
 	{
 		timestamps: false,
+		tableName: 'exchange_rates',
 	},
 )
 
+// Relacionamento
 ExchangeRate.belongsTo(Currency, { foreignKey: 'currency_id' })
+Currency.hasMany(ExchangeRate, { foreignKey: 'currency_id' })
 
 module.exports = ExchangeRate

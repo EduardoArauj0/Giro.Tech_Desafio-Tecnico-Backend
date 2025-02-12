@@ -1,5 +1,5 @@
 const { DataTypes } = require('sequelize')
-const sequelize = require('../config/database')
+const sequelize = require('../database/connection')
 const Currency = require('./Currency')
 const Investor = require('./Investor')
 
@@ -8,8 +8,8 @@ const InvestmentHistory = sequelize.define(
 	{
 		id: {
 			type: DataTypes.INTEGER,
-			primaryKey: true,
 			autoIncrement: true,
+			primaryKey: true,
 		},
 		initial_amount: {
 			type: DataTypes.FLOAT,
@@ -30,10 +30,14 @@ const InvestmentHistory = sequelize.define(
 	},
 	{
 		timestamps: false,
+		tableName: 'investment_history',
 	},
 )
 
+// Relacionamentos
 InvestmentHistory.belongsTo(Currency, { foreignKey: 'currency_id' })
 InvestmentHistory.belongsTo(Investor, { foreignKey: 'investor_id' })
+Currency.hasMany(InvestmentHistory, { foreignKey: 'currency_id' })
+Investor.hasMany(InvestmentHistory, { foreignKey: 'investor_id' })
 
 module.exports = InvestmentHistory
