@@ -1,0 +1,32 @@
+services:
+  api:
+    build: .
+    container_name: giro_tech_api
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mysql
+    env_file:
+      - .env
+    volumes:
+      - .:/app
+    command: npm run dev
+
+  mysql:
+    image: mysql:5.7
+    container_name: giro_tech_db
+    restart: always
+    env_file: .env
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_ALLOW_EMPTY_PASSWORD=yes
+    ports:
+      - "${MYSQL_LOCAL_PORT}:${MYSQL_DOCKER_PORT}"
+    expose:
+      - ${MYSQL_DOCKER_PORT}
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+volumes:
+  mysql_data:
