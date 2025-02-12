@@ -4,7 +4,7 @@
 	"description": "API para gerenciamento de moedas, taxas de câmbio e investimentos",
 	"main": "server.js",
 	"scripts": {
-		"sync": "node sync.js",
+		"sync": "node ./utils sync.js",
 		"start": "node server.js",
 		"dev": "nodemon server.js",
 		"migrate": "sequelize db:migrate",
