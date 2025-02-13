@@ -28,6 +28,20 @@ class InvestorsController {
 	async create(req, res) {
 		try {
 			const { name, email } = req.body
+
+			if (!name || !email) {
+				return res
+					.status(400)
+					.json({ message: 'Nome e e-mail são obrigatórios.' })
+			}
+
+			const existingInvestor = await Investor.findOne({ where: { email } })
+			if (existingInvestor) {
+				return res
+					.status(400)
+					.json({ message: 'Já existe um investidor com esse e-mail.' })
+			}
+
 			const investor = await Investor.create({ name, email })
 			return res.status(201).json(investor)
 		} catch (error) {
@@ -55,14 +69,21 @@ class InvestorsController {
 	async destroy(req, res) {
 		try {
 			const { id } = req.params
+
 			const investor = await Investor.findByPk(id)
 			if (!investor) {
 				return res.status(404).json({ message: 'Investidor não encontrado.' })
 			}
+
+			await InvestmentHistory.destroy({ where: { investor_id: id } })
+
 			await investor.destroy()
-			return res.status(204).send()
+
+			return res
+				.status(200)
+				.json({ message: 'Investidor removido com sucesso.' })
 		} catch (error) {
-			console.error('Erro ao excluir investidor:', error)
+			console.error('Erro ao remover investidor:', error)
 			return res.status(500).json({ message: 'Erro interno do servidor.' })
 		}
 	}

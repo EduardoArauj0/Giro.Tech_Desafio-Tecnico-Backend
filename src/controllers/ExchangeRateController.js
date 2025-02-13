@@ -76,6 +76,53 @@ class ExchangeRatesController {
 			return res.status(500).json({ message: 'Erro interno do servidor.' })
 		}
 	}
+
+	async recent(req, res) {
+		try {
+			const sevenDaysAgo = new Date()
+			sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7)
+
+			const rates = await ExchangeRate.findAll({
+				where: { date: { [Op.gte]: sevenDaysAgo } },
+				include: {
+					model: Currency,
+					attributes: ['name', 'type'],
+				},
+			})
+
+			const formattedRates = rates.map((rate) => ({
+				id: rate.id,
+				date: rate.date,
+				daily_variation: rate.daily_variation,
+				daily_rate: rate.daily_rate,
+				currency_name: rate.Currency.name,
+				currency_type: rate.Currency.type,
+			}))
+
+			return res.status(200).json(formattedRates)
+		} catch (error) {
+			console.error('Erro ao buscar taxas recentes:', error)
+			return res.status(500).json({ message: 'Erro interno do servidor.' })
+		}
+	}
+	
+	async deleteOld(req, res) {
+		try {
+			const thirtyDaysAgo = new Date()
+			thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30)
+
+			const deletedCount = await ExchangeRate.destroy({
+				where: { date: { [Op.lt]: thirtyDaysAgo } },
+			})
+
+			return res
+				.status(200)
+				.json({ message: `${deletedCount} registros removidos.` })
+		} catch (error) {
+			console.error('Erro ao remover taxas antigas:', error)
+			return res.status(500).json({ message: 'Erro interno do servidor.' })
+		}
+	}
 }
 
 module.exports = new ExchangeRatesController()

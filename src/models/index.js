@@ -7,9 +7,9 @@ const InvestmentHistory = require('./InvestmentHistory')
 const syncDatabase = async () => {
 	try {
 		await sequelize.sync({ force: false })
-		console.log('✅ Banco de dados sincronizado')
+		console.log('Banco de dados sincronizado')
 	} catch (error) {
-		console.error('❌ Erro ao sincronizar banco de dados:', error)
+		console.error('Erro ao sincronizar banco de dados:', error)
 	}
 }
 
