@@ -4,11 +4,12 @@
 	"description": "API para gerenciamento de moedas, taxas de câmbio e investimentos",
 	"main": "server.js",
 	"scripts": {
-		"sync": "node ./utils sync.js",
-		"start": "node server.js",
-		"dev": "nodemon server.js",
-		"migrate": "sequelize db:migrate",
-		"seed": "sequelize db:seed:all"
+		"sequelize": "sequelize",
+		"db:migrate": "sequelize db:migrate --config ./src/config/config.json",
+		"db:seed:all": "sequelize db:seed:all",
+		"sync": "node ./src/utils/sync.js",
+		"start": "node ./src/server.js",
+		"dev": "nodemon ./src/server.js"
 	},
 	"dependencies": {
 		"cors": "^2.8.5",
@@ -23,6 +24,7 @@
 		"eslint": "^9.20.1",
 		"globals": "^15.14.0",
 		"nodemon": "^3.0.2",
-		"prettier": "3.5.0"
+		"prettier": "3.5.0",
+		"sequelize-cli": "^6.6.2"
 	}
 }
